@@ -97,3 +97,53 @@ candidatos.forEach(candidato => {
     });
 });
 
+const analises = [];
+
+candidatos.forEach(candidato => {
+
+    const resultados = [];
+
+    vagas.forEach(vaga => {
+
+        const requisitosCompativeis = calcularCompatibilidade(
+            candidato.habilidades,
+            vaga.requisitos
+        );
+
+        const percentual = calcularPercentualCompatibilidade(
+            requisitosCompativeis,
+            vaga.requisitos.length
+        );
+
+        const classificacao = classificarCompatibilidade(percentual);
+
+        const habilidadesFaltantes = vaga.requisitos.filter(
+            requisito => !candidato.habilidades.includes(requisito)
+        );
+
+        resultados.push({
+            vaga: vaga,
+            percentual: percentual,
+            classificacao: classificacao,
+            habilidadesFaltantes: habilidadesFaltantes
+        });
+    });
+
+    const melhorVaga = resultados.reduce((acumulador, elementoAtual) => {
+
+        if (elementoAtual.percentual > acumulador.percentual) {
+            return elementoAtual;
+        }
+
+        return acumulador;
+    });
+
+    analises.push({
+        candidato: candidato,
+        resultados: resultados,
+        melhorVaga: melhorVaga
+    });
+});
+
+console.log(analises);
+
