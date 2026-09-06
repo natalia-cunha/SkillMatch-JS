@@ -42,3 +42,19 @@ const vagas = [
         requisitos: ["HTML", "CSS", "JavaScript", "React"]
     }
 ];
+
+function calcularCompatibilidade(habilidades, requisitos) {
+    let requisitosCompativeis = 0;
+
+    requisitos.forEach(requisito => {
+        if (habilidades.includes(requisito)) {
+            requisitosCompativeis++;
+        }
+    });
+
+    return requisitosCompativeis;
+}
+
+function calcularPercentualCompatibilidade(requisitosCompativeis, totalRequisitos) {
+    return requisitosCompativeis / totalRequisitos * 100;
+}
