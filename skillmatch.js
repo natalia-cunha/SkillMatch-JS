@@ -58,3 +58,42 @@ function calcularCompatibilidade(habilidades, requisitos) {
 function calcularPercentualCompatibilidade(requisitosCompativeis, totalRequisitos) {
     return requisitosCompativeis / totalRequisitos * 100;
 }
+
+function classificarCompatibilidade(percentual) {
+    if (percentual >= 80) {
+        return "Alta compatibilidade";
+    } else if (percentual >= 50) {
+        return "Média compatibilidade";
+    } else {
+        return "Baixa compatibilidade";
+    }
+}
+
+candidatos.forEach(candidato => {
+
+    vagas.forEach(vaga => {
+
+        const requisitosCompativeis = calcularCompatibilidade(
+            candidato.habilidades,
+            vaga.requisitos
+        );
+
+        const percentual = calcularPercentualCompatibilidade(
+            requisitosCompativeis,
+            vaga.requisitos.length
+        );
+
+        const classificacao = classificarCompatibilidade(percentual);
+
+        const habilidadesFaltantes = vaga.requisitos.filter(
+            requisito => !candidato.habilidades.includes(requisito)
+        );
+
+        console.log(candidato.nome);
+        console.log(vaga.cargo);
+        console.log(percentual);
+        console.log(classificacao);
+        console.log(habilidadesFaltantes);
+    });
+});
+
