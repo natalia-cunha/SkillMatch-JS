@@ -99,6 +99,33 @@ function classificarCompatibilidade(percentual) {
     }
 }
 
+function recomendarEstudo(resultados) {
+
+    const habilidadesParaEstudar = [];
+
+    resultados.forEach(resultado => {
+        resultado.habilidadesFaltantes.forEach(habilidade => {
+            habilidadesParaEstudar.push(habilidade);
+        });
+    });
+
+    let habilidadePrioritaria = "";
+    let maiorQuantidade = 0;
+
+    habilidadesParaEstudar.forEach(habilidade => {
+
+        const quantidade = habilidadesParaEstudar.filter(
+            habilidadeAtual => habilidadeAtual === habilidade
+        ).length;
+
+        if (quantidade > maiorQuantidade) {
+            habilidadePrioritaria = habilidade;
+            maiorQuantidade = quantidade;
+        }
+    });
+
+    return habilidadePrioritaria;
+}
 
 function analisarCandidatos(vagas) {
 
@@ -145,9 +172,7 @@ function analisarCandidatos(vagas) {
         });
 
 
-        const recomendacaoEstudo = resultados.map(resultado => {
-            return resultado.habilidadesFaltantes;
-        });
+        const recomendacaoEstudo = recomendarEstudo(resultados);
 
 
         analises.push({
