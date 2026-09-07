@@ -5,7 +5,6 @@ class Pessoa {
     }
 }
 
-
 class Candidato extends Pessoa {
     constructor(nome, experiencia, areaInteresse, habilidades) {
         super(nome, experiencia);
@@ -17,7 +16,6 @@ class Candidato extends Pessoa {
         return this.habilidades.includes(habilidade);
     }
 }
-
 
 const candidatos = [
     new Candidato(
@@ -49,27 +47,23 @@ const candidatos = [
     )
 ];
 
-
 const vagas = [
     {
         empresa: "Tech Solutions",
         cargo: "Desenvolvedor Front-end Júnior",
         requisitos: ["HTML", "CSS", "JavaScript"]
     },
-
     {
         empresa: "CodeLab",
         cargo: "Desenvolvedor Front-end Júnior",
         requisitos: ["HTML", "CSS", "JavaScript", "Git"]
     },
-
     {
         empresa: "WebStart",
         cargo: "Desenvolvedor Front-end Júnior",
         requisitos: ["HTML", "CSS", "JavaScript", "React"]
     }
 ];
-
 
 function calcularCompatibilidade(candidato, requisitos) {
     let requisitosCompativeis = 0;
@@ -83,11 +77,12 @@ function calcularCompatibilidade(candidato, requisitos) {
     return requisitosCompativeis;
 }
 
-
-function calcularPercentualCompatibilidade(requisitosCompativeis, totalRequisitos) {
+function calcularPercentualCompatibilidade(
+    requisitosCompativeis,
+    totalRequisitos
+) {
     return requisitosCompativeis / totalRequisitos * 100;
 }
-
 
 function classificarCompatibilidade(percentual) {
     if (percentual >= 80) {
@@ -100,7 +95,6 @@ function classificarCompatibilidade(percentual) {
 }
 
 function recomendarEstudo(resultados) {
-
     const habilidadesParaEstudar = [];
 
     resultados.forEach(resultado => {
@@ -113,7 +107,6 @@ function recomendarEstudo(resultados) {
     let maiorQuantidade = 0;
 
     habilidadesParaEstudar.forEach(habilidade => {
-
         const quantidade = habilidadesParaEstudar.filter(
             habilidadeAtual => habilidadeAtual === habilidade
         ).length;
@@ -128,15 +121,12 @@ function recomendarEstudo(resultados) {
 }
 
 function analisarCandidatos(vagas) {
-
     const analises = [];
 
     candidatos.forEach(candidato => {
-
         const resultados = [];
 
         vagas.forEach(vaga => {
-
             const requisitosCompativeis = calcularCompatibilidade(
                 candidato,
                 vaga.requisitos
@@ -161,19 +151,17 @@ function analisarCandidatos(vagas) {
             });
         });
 
+        const melhorVaga = resultados.reduce(
+            (acumulador, elementoAtual) => {
+                if (elementoAtual.percentual > acumulador.percentual) {
+                    return elementoAtual;
+                }
 
-        const melhorVaga = resultados.reduce((acumulador, elementoAtual) => {
-
-            if (elementoAtual.percentual > acumulador.percentual) {
-                return elementoAtual;
+                return acumulador;
             }
-
-            return acumulador;
-        });
-
+        );
 
         const recomendacaoEstudo = recomendarEstudo(resultados);
-
 
         analises.push({
             candidato: candidato,
@@ -186,28 +174,22 @@ function analisarCandidatos(vagas) {
     return analises;
 }
 
-
 function analisarRequisitos(vaga) {
     return `${vaga.empresa} - ${vaga.cargo}: ${vaga.requisitos.length} requisitos`;
 }
 
-
 function processarVagas(vagas, callback) {
-
     const contarVaga = criarContador();
 
-    vagas.forEach(vaga => {
-
-        const resultado = callback(vaga);
+    for (let i = 0; i < vagas.length; i++) {
+        const resultado = callback(vagas[i]);
 
         console.log(resultado);
         console.log(`Vagas processadas: ${contarVaga()}`);
-    });
+    }
 }
 
-
 function criarContador() {
-
     let contador = 0;
 
     return function() {
@@ -216,32 +198,33 @@ function criarContador() {
     };
 }
 
-
 function carregarVagas() {
-
     return new Promise((resolve, reject) => {
-
         setTimeout(() => {
-            resolve(vagas);
+            if (vagas.length > 0) {
+                resolve(vagas);
+            } else {
+                reject("Não foi possível carregar as vagas.");
+            }
         }, 2000);
-
     });
 }
 
-
 async function iniciarSistema() {
+    try {
+        const vagasRecebidas = await carregarVagas();
 
-    const vagasRecebidas = await carregarVagas();
+        console.log("Vagas recebidas:");
+        console.log(vagasRecebidas);
 
-    console.log("Vagas recebidas:");
-    console.log(vagasRecebidas);
+        const analises = analisarCandidatos(vagasRecebidas);
 
-    const analises = analisarCandidatos(vagasRecebidas);
+        console.dir(analises, { depth: null });
 
-    console.dir(analises, { depth: null });
-
-    processarVagas(vagasRecebidas, analisarRequisitos);
+        processarVagas(vagasRecebidas, analisarRequisitos);
+    } catch (erro) {
+        console.log(erro);
+    }
 }
-
 
 iniciarSistema();
