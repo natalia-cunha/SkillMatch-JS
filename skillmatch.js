@@ -5,6 +5,7 @@ class Pessoa {
     }
 }
 
+
 class Candidato extends Pessoa {
     constructor(nome, experiencia, areaInteresse, habilidades) {
         super(nome, experiencia);
@@ -99,70 +100,89 @@ function classificarCompatibilidade(percentual) {
 }
 
 
-const analises = [];
+function analisarCandidatos(vagas) {
 
-candidatos.forEach(candidato => {
+    const analises = [];
 
-    const resultados = [];
+    candidatos.forEach(candidato => {
 
-    vagas.forEach(vaga => {
+        const resultados = [];
 
-        const requisitosCompativeis = calcularCompatibilidade(
-            candidato,
-            vaga.requisitos
-        );
+        vagas.forEach(vaga => {
 
-        const percentual = calcularPercentualCompatibilidade(
-            requisitosCompativeis,
-            vaga.requisitos.length
-        );
+            const requisitosCompativeis = calcularCompatibilidade(
+                candidato,
+                vaga.requisitos
+            );
 
-        const classificacao = classificarCompatibilidade(percentual);
+            const percentual = calcularPercentualCompatibilidade(
+                requisitosCompativeis,
+                vaga.requisitos.length
+            );
 
-        const habilidadesFaltantes = vaga.requisitos.filter(
-            requisito => !candidato.possuiHabilidade(requisito)
-        );
+            const classificacao = classificarCompatibilidade(percentual);
 
-        resultados.push({
-            vaga: vaga,
-            percentual: percentual,
-            classificacao: classificacao,
-            habilidadesFaltantes: habilidadesFaltantes
+            const habilidadesFaltantes = vaga.requisitos.filter(
+                requisito => !candidato.possuiHabilidade(requisito)
+            );
+
+            resultados.push({
+                vaga: vaga,
+                percentual: percentual,
+                classificacao: classificacao,
+                habilidadesFaltantes: habilidadesFaltantes
+            });
+        });
+
+
+        const melhorVaga = resultados.reduce((acumulador, elementoAtual) => {
+
+            if (elementoAtual.percentual > acumulador.percentual) {
+                return elementoAtual;
+            }
+
+            return acumulador;
+        });
+
+
+        const recomendacaoEstudo = resultados.map(resultado => {
+            return resultado.habilidadesFaltantes;
+        });
+
+
+        analises.push({
+            candidato: candidato,
+            resultados: resultados,
+            melhorVaga: melhorVaga,
+            recomendacaoEstudo: recomendacaoEstudo
         });
     });
 
+    return analises;
+}
 
-    const melhorVaga = resultados.reduce((acumulador, elementoAtual) => {
-
-        if (elementoAtual.percentual > acumulador.percentual) {
-            return elementoAtual;
-        }
-
-        return acumulador;
-    });
-
-
-    const recomendacaoEstudo = resultados.map(resultado => {
-        return resultado.habilidadesFaltantes;
-    });
-
-
-    analises.push({
-        candidato: candidato,
-        resultados: resultados,
-        melhorVaga: melhorVaga,
-        recomendacaoEstudo: recomendacaoEstudo
-    });
-});
-
-
-console.dir(analises, { depth: null });
 
 function analisarRequisitos(vaga) {
     return `${vaga.empresa} - ${vaga.cargo}: ${vaga.requisitos.length} requisitos`;
 }
 
+
+function processarVagas(vagas, callback) {
+
+    const contarVaga = criarContador();
+
+    vagas.forEach(vaga => {
+
+        const resultado = callback(vaga);
+
+        console.log(resultado);
+        console.log(`Vagas processadas: ${contarVaga()}`);
+    });
+}
+
+
 function criarContador() {
+
     let contador = 0;
 
     return function() {
@@ -171,16 +191,32 @@ function criarContador() {
     };
 }
 
-function processarVagas(vagas, callback) {
 
-    const contarVaga = criarContador();
+function carregarVagas() {
 
-    vagas.forEach(vaga => {
-        const resultado = callback(vaga);
-        console.log(resultado);
-        console.log(`Vagas processadas: ${contarVaga()}`);
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            resolve(vagas);
+        }, 2000);
+
     });
 }
 
 
-processarVagas(vagas, analisarRequisitos);
+async function iniciarSistema() {
+
+    const vagasRecebidas = await carregarVagas();
+
+    console.log("Vagas recebidas:");
+    console.log(vagasRecebidas);
+
+    const analises = analisarCandidatos(vagasRecebidas);
+
+    console.dir(analises, { depth: null });
+
+    processarVagas(vagasRecebidas, analisarRequisitos);
+}
+
+
+iniciarSistema();
