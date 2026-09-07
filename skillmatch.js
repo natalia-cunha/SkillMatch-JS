@@ -157,3 +157,16 @@ candidatos.forEach(candidato => {
 
 
 console.dir(analises, { depth: null });
+
+function analisarRequisitos(vaga) {
+    return `${vaga.empresa} - ${vaga.cargo}: ${vaga.requisitos.length} requisitos`;
+}
+
+function processarVagas(vagas, callback) {
+    vagas.forEach(vaga => {
+        const resultado = callback(vaga);
+        console.log(resultado);
+    });
+}
+
+processarVagas(vagas, analisarRequisitos);
