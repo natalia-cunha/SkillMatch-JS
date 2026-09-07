@@ -1,28 +1,51 @@
-const candidatos = [
-    {
-        nome: "Natália de Souza Cunha",
-        areaInteresse: "Front-end",
-        habilidades: ["HTML", "CSS", "JavaScript"],
-        experiencia: 0
-    },
-    {
-        nome: "Ana Beatriz Silva",
-        areaInteresse: "Front-end",
-        habilidades: ["HTML", "CSS", "JavaScript"],
-        experiencia: 1
-    },
-    {
-        nome: "Lucas Oliveira",
-        areaInteresse: "Front-end",
-        habilidades: ["HTML", "CSS", "JavaScript", "Git"],
-        experiencia: 2
-    },
-    {
-        nome: "Mariana Santos",
-        areaInteresse: "Front-end",
-        habilidades: ["HTML", "CSS", "JavaScript", "React"],
-        experiencia: 1
+class Pessoa {
+    constructor(nome, experiencia) {
+        this.nome = nome;
+        this.experiencia = experiencia;
     }
+}
+
+class Candidato extends Pessoa {
+    constructor(nome, experiencia, areaInteresse, habilidades) {
+        super(nome, experiencia);
+        this.areaInteresse = areaInteresse;
+        this.habilidades = habilidades;
+    }
+
+    possuiHabilidade(habilidade) {
+        return this.habilidades.includes(habilidade);
+    }
+}
+
+
+const candidatos = [
+    new Candidato(
+        "Natália de Souza Cunha",
+        0,
+        "Front-end",
+        ["HTML", "CSS", "JavaScript"]
+    ),
+
+    new Candidato(
+        "Ana Beatriz Silva",
+        1,
+        "Front-end",
+        ["HTML", "CSS", "JavaScript"]
+    ),
+
+    new Candidato(
+        "Lucas Oliveira",
+        2,
+        "Front-end",
+        ["HTML", "CSS", "JavaScript", "Git"]
+    ),
+
+    new Candidato(
+        "Mariana Santos",
+        1,
+        "Front-end",
+        ["HTML", "CSS", "JavaScript", "React"]
+    )
 ];
 
 
@@ -32,11 +55,13 @@ const vagas = [
         cargo: "Desenvolvedor Front-end Júnior",
         requisitos: ["HTML", "CSS", "JavaScript"]
     },
+
     {
         empresa: "CodeLab",
         cargo: "Desenvolvedor Front-end Júnior",
         requisitos: ["HTML", "CSS", "JavaScript", "Git"]
     },
+
     {
         empresa: "WebStart",
         cargo: "Desenvolvedor Front-end Júnior",
@@ -45,11 +70,11 @@ const vagas = [
 ];
 
 
-function calcularCompatibilidade(habilidades, requisitos) {
+function calcularCompatibilidade(candidato, requisitos) {
     let requisitosCompativeis = 0;
 
     requisitos.forEach(requisito => {
-        if (habilidades.includes(requisito)) {
+        if (candidato.possuiHabilidade(requisito)) {
             requisitosCompativeis++;
         }
     });
@@ -83,7 +108,7 @@ candidatos.forEach(candidato => {
     vagas.forEach(vaga => {
 
         const requisitosCompativeis = calcularCompatibilidade(
-            candidato.habilidades,
+            candidato,
             vaga.requisitos
         );
 
@@ -95,7 +120,7 @@ candidatos.forEach(candidato => {
         const classificacao = classificarCompatibilidade(percentual);
 
         const habilidadesFaltantes = vaga.requisitos.filter(
-            requisito => !candidato.habilidades.includes(requisito)
+            requisito => !candidato.possuiHabilidade(requisito)
         );
 
         resultados.push({
@@ -131,4 +156,4 @@ candidatos.forEach(candidato => {
 });
 
 
-console.log(analises);
+console.dir(analises, { depth: null });
