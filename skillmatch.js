@@ -162,11 +162,25 @@ function analisarRequisitos(vaga) {
     return `${vaga.empresa} - ${vaga.cargo}: ${vaga.requisitos.length} requisitos`;
 }
 
+function criarContador() {
+    let contador = 0;
+
+    return function() {
+        contador++;
+        return contador;
+    };
+}
+
 function processarVagas(vagas, callback) {
+
+    const contarVaga = criarContador();
+
     vagas.forEach(vaga => {
         const resultado = callback(vaga);
         console.log(resultado);
+        console.log(`Vagas processadas: ${contarVaga()}`);
     });
 }
+
 
 processarVagas(vagas, analisarRequisitos);
