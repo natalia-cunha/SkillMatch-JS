@@ -25,6 +25,7 @@ const candidatos = [
     }
 ];
 
+
 const vagas = [
     {
         empresa: "Tech Solutions",
@@ -43,6 +44,7 @@ const vagas = [
     }
 ];
 
+
 function calcularCompatibilidade(habilidades, requisitos) {
     let requisitosCompativeis = 0;
 
@@ -55,9 +57,11 @@ function calcularCompatibilidade(habilidades, requisitos) {
     return requisitosCompativeis;
 }
 
+
 function calcularPercentualCompatibilidade(requisitosCompativeis, totalRequisitos) {
     return requisitosCompativeis / totalRequisitos * 100;
 }
+
 
 function classificarCompatibilidade(percentual) {
     if (percentual >= 80) {
@@ -69,33 +73,6 @@ function classificarCompatibilidade(percentual) {
     }
 }
 
-candidatos.forEach(candidato => {
-
-    vagas.forEach(vaga => {
-
-        const requisitosCompativeis = calcularCompatibilidade(
-            candidato.habilidades,
-            vaga.requisitos
-        );
-
-        const percentual = calcularPercentualCompatibilidade(
-            requisitosCompativeis,
-            vaga.requisitos.length
-        );
-
-        const classificacao = classificarCompatibilidade(percentual);
-
-        const habilidadesFaltantes = vaga.requisitos.filter(
-            requisito => !candidato.habilidades.includes(requisito)
-        );
-
-        console.log(candidato.nome);
-        console.log(vaga.cargo);
-        console.log(percentual);
-        console.log(classificacao);
-        console.log(habilidadesFaltantes);
-    });
-});
 
 const analises = [];
 
@@ -129,6 +106,7 @@ candidatos.forEach(candidato => {
         });
     });
 
+
     const melhorVaga = resultados.reduce((acumulador, elementoAtual) => {
 
         if (elementoAtual.percentual > acumulador.percentual) {
@@ -138,12 +116,19 @@ candidatos.forEach(candidato => {
         return acumulador;
     });
 
+
+    const recomendacaoEstudo = resultados.map(resultado => {
+        return resultado.habilidadesFaltantes;
+    });
+
+
     analises.push({
         candidato: candidato,
         resultados: resultados,
-        melhorVaga: melhorVaga
+        melhorVaga: melhorVaga,
+        recomendacaoEstudo: recomendacaoEstudo
     });
 });
 
-console.log(analises);
 
+console.log(analises);
