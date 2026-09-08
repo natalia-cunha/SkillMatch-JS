@@ -407,9 +407,7 @@ SkillMatch-JS/
 
 ## 🎥 Vídeo de apresentação
 
-Link para o vídeo de apresentação:
-
-**[Adicionar aqui o link do vídeo]**
+[Assistir ao vídeo de apresentação](https://drive.google.com/file/d/17Rh0us6L50barzXs2VHKs6I7i88CTkql/view?usp=sharing)
 
 ## 🚀 Status do projeto
 
